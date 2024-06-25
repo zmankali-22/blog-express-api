@@ -5,11 +5,18 @@ const app = express();
 // Allows POSt requests to have JSON body content
 app.use(express.json());
 
+
+
+
 app.get("/", (request, response, next) => {
   response.json({
     message: "Hello World",
   });
 });
+
+const blogRouter = require("./controllers/BlogRouter");
+app.use("/blogs", blogRouter);
+
 
 app.get("*", (request, response, next) => {
   response.status(404).json({
