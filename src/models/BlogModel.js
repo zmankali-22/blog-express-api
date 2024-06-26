@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const { commentSchema } = require("./CommentSchema");
 
 const blogSchema = mongoose.Schema(
   {
@@ -11,39 +12,45 @@ const blogSchema = mongoose.Schema(
       required: true,
     },
     author: {
-      type: String, // come back later and replace with a MOngoose object ID
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
       required: true,
     },
-    likes : {
-        type : [String], // come back later, replace this with mongoose object ID
-        required: false,
+    likes: {
+      type: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+      required: false,
     },
-    headerImage : {
-        type : String, // URL to the file/image storage provider
-        required: true,
+    headerImage: {
+      type: String, // URL to the file/image storage provider
+      required: true,
     },
-    tags : { // keywords defined by blog post author
-        type : [String], // ["life", "travel", "photography"]
-        required: true,
+    tags: {
+      // keywords defined by blog post author
+      type: [String], // ["life", "travel", "photography"]
+      required: true,
     },
-    categories : { // post category defined by website admin/developer
-        type : [String], // ["life", "travel", "photography"]
-        enum : ["life", "travel", "photography", "coding"],
-        required: true,
+    categories: {
+      // post category defined by website admin/developer
+      type: [String], // ["life", "travel", "photography"]
+      enum: ["life", "travel", "photography", "coding"],
+      required: true,
     },
-    editHistory : {
-        type : [{user: String, timestamp: Date}], 
-        required: false,
-    }
+    editHistory: {
+      type: [{ user: String, timestamp: Date }],
+      required: false,
+    },
+    comments: {
+      type: [commentSchema],
+      required: false,
+    },
   },
   {
     timestamps: true,
   }
 );
 
-
-const BlogMOdel = mongoose.model("Blog", blogSchema)
+const BlogModel = mongoose.model("Blog", blogSchema);
 
 module.exports = {
-  BlogMOdel,
+  BlogModel,
 };
