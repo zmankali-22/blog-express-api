@@ -1,46 +1,79 @@
-
-
-const express = require('express');
-const { BlogModel } = require('../models/BlogModel');
-const {UserModel} = require('../models/UserModel');
-const router = express.Router()
-
+const express = require("express");
+const { BlogModel } = require("../models/BlogModel");
+const { UserModel } = require("../models/UserModel");
+const router = express.Router();
 
 router.get("/", async (request, response, next) => {
+  let result = await BlogModel.find({}).populate("author").exec();
+  response.json({
+    message: "Blog Router homepage",
+    result: result,
+  });
+});
 
-    let result = await  BlogModel.find({}).populate("author").exec()
-    response.json({
-        message: "Blog Router homepage",
-        result: result
-    });
-})
+router.get("/findById/:id", async (request, response, next) => {
+  let result = await BlogModel.findById(request.params.id)
+    .populate("author")
+    .exec();
+  response.json({
+    message: "Blog Router  Id homepage",
+    result: result,
+  });
+});
+router.post("/findOneQuery", async (request, response, next) => {
+  let result = await BlogModel.findOne(request.body)
+    .populate("author")
+    .exec();
+  response.json({
+    message: "Blog Router  Id homepage",
+    result: result,
+  });
+});
+router.post("/findManyQuery", async (request, response, next) => {
+  let result = await BlogModel.find(request.body)
+    .populate("author")
+    .exec();
+  response.json({
+    message: "Blog Router  Id homepage",
+    result: result,
+  });
+});
 
-router.get("/:id", (request, response, next) => {
-    response.json({
-        message: "Blog Router homepage",
-    });
-})
+router.post("/", async (request, response, next) => {
+  let result = await BlogModel.create(request.body).catch((error) => {
+    error.status = 400;
+    return error;
+  });
 
-router.post("/", (request, response, next) => {
-    response.json({
-        message: "Blog Router homepage",
-    });
-})
+  if (result.errors) {
+    return next(result);
+  }
+  response.json({
+    message: "Blog Router homepage",
+    result: result,
+  });
+});
 
-router.patch("/", (request, response, next) => {
-    response.json({
-        message: "Blog Router homepage",
-    });
-})
+router.patch("/findById/:id", async (request, response, next) => {
+  let result = await BlogModel.findByIdAndUpdate(
+    request.params.id,
+    request.body,
+    {
+      returnDocument: "after",
+    }
+  );
+  response.json({
+    message: "Blog Router homepage",
+    result: result,
+  });
+});
 
-router.delete("/", (request, response, next) => {
-    response.json({
-        message: "Blog Router homepage",
-    });
-})
+router.delete("/", async (request, response, next) => {
+  let result = await BlogModel.findByIdAndDelete(request.body.id);
+  response.json({
+    message: "Blog Router homepage",
+    result: result,
+  });
+});
 
-
-
-
-
-module.exports = router
+module.exports = router;

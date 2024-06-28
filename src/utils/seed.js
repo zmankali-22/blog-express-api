@@ -24,7 +24,7 @@ async function seedUsers() {
 async function seedBlogPosts(usersToUse) {
   let blogData = [
     {
-      title: " super cool blog post",
+      title: "super cool blog post",
       content: "blog post super 3000 words",
       author: usersToUse[0]._id,
       headerImage: "https://placehold.co/600x400/EEE/31343C",
@@ -32,7 +32,7 @@ async function seedBlogPosts(usersToUse) {
       categories: ["coding", "travel"],
     },
     {
-      title: "  another super cool blog post",
+      title: "another super cool blog post",
       content: "blog post super 4000 words",
       author: usersToUse[1]._id,
       headerImage: "https://placehold.co/600x400/EEE/31343C",
@@ -40,7 +40,7 @@ async function seedBlogPosts(usersToUse) {
       categories: ["photography", "life"],
     },
     {
-      title: "  third super cool blog post",
+      title: "third super cool blog post",
       content: "blog post super 34000 words",
       author: usersToUse[1]._id,
       headerImage: "https://placehold.co/600x400/EEE/31343C",
