@@ -9,16 +9,30 @@ const {
 async function seedUsers() {
   let userData = [
     {
-      username: "user1",
+      username: "shiva",
+      password: "password"
     },
     {
-      username: "user2",
+      username: "bisnu",
+      password: "password"
     },
   ];
 
+  let thirdUser = {
+    username: "thirduser",
+    password: "password",
+  }
+
+  console.log("creating user with .create() method");
+  let callum = await UserModel.create(thirdUser)
+
+  console.log("calling save on the created user...");
+  await callum.save()
+
+  console.log("creating users from insertmany...");
   let result = await UserModel.insertMany(userData);
-  console.log(result);
-  return result;
+  console.log([...result, callum]);
+  return [...result, callum];
 }
 
 async function seedBlogPosts(usersToUse) {
