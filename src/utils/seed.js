@@ -19,7 +19,7 @@ async function seedUsers() {
   ];
 
   let thirdUser = {
-    username: "thirduser",
+    username: "callum",
     password: "password",
   }
 
