@@ -1,5 +1,6 @@
 const { BlogModel } = require("../models/BlogModel");
 const { UserModel } = require("../models/UserModel");
+const { comparePasswords, createJwt, validateJwt } = require("./authHelpers");
 const {
   databaseConnect,
   databaseClear,
@@ -10,27 +11,45 @@ async function seedUsers() {
   let userData = [
     {
       username: "shiva",
-      password: "password"
+      password: "password",
     },
     {
       username: "bisnu",
-      password: "password"
+      password: "password",
     },
   ];
 
   let thirdUser = {
     username: "callum",
-    password: "password",
-  }
+    password: "supercool",
+  };
 
   console.log("creating user with .create() method");
-  let callum = await UserModel.create(thirdUser)
+  let callum = await UserModel.create(thirdUser);
 
   console.log("calling save on the created user...");
-  await callum.save()
+  await callum.save();
 
-  console.log("creating users from insertmany...");
-  let result = await UserModel.insertMany(userData);
+  console.log("Callum's encrypted password is: " + callum.password);
+  let doesSuperCoolMatch = await comparePasswords(
+    "supercool",
+    callum.password
+  );
+  console.log("callums password is supercool: " + doesSuperCoolMatch);
+
+  //   console.log("creating users from insertmany...");
+  //   let result = await UserModel.insertMany(userData);
+
+  console.log(
+    "creating users from in bulk by promise.all over usermodel.create"
+  );
+
+  let result = await Promise.all(
+    userData.map(async (user) => {
+      let newUser = await UserModel.create(user);
+      return newUser;
+    })
+  );
   console.log([...result, callum]);
   return [...result, callum];
 }
@@ -63,7 +82,6 @@ async function seedBlogPosts(usersToUse) {
     },
   ];
 
-
   let result = await BlogModel.insertMany(blogData);
   console.log(result);
   return result;
@@ -75,6 +93,12 @@ async function seed() {
 
   let newUsers = await seedUsers();
   let newBlogPosts = await seedBlogPosts(newUsers);
+
+  let newJwt = createJwt(newUsers[0]._id)
+  console.log("New JWT: " + newJwt);
+
+  validateJwt(newJwt)
+
 
   console.log("Seeded data");
   await databaseClose();
