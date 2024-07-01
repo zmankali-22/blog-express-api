@@ -17,6 +17,9 @@ app.get("/", (request, response, next) => {
 const blogRouter = require("./controllers/BlogRouter");
 app.use("/blogs", blogRouter);
 
+const userRouter = require("./controllers/UserRouter");
+app.use("/users", userRouter);
+
 
 app.get("*", (request, response, next) => {
   response.status(404).json({
